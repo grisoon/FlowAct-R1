@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="FlowAct-R1: Towards Interactive Humanoid Video Generation">
+  <meta name="keywords" content="Animation, Diffusion Transformer, Video Generation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlowAct-R1: Towards Interactive Humanoid Video Generation</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    .section {
+      margin-top: 0rem; /* 增加章节之间的间距 */
+      margin-bottom: 0rem; /* 增加章节之间的间距 */
+    }
+
+    .content {
+      margin-bottom: 0rem; /* 减小章节内的间距 */
+    }
+
+    h2.title {
+      margin-bottom: 0rem; /* 恢复章节标题和正文之间的间距 */
+    }
+  </style>
+</head>
+<body>
+
+
+<!-- <section class="hero" style="background-color: #f5f5f5;"> -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-widescreen">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title" style="display: inline-block; text-align: center;">
+            <img src="./static/images/logo.png" alt="FlowAct-R1 Logo" class="img-responsive" style="height: 1.1em; width: auto; vertical-align: middle; display: inline-block;">
+            <span style="vertical-align: middle;">: Towards Interactive Humanoid Video Generation</span>
+          </h1>
+          <!-- <h1 class="title is-4 publication-title"></h1> -->
+          <div class="is-size-5 publication-authors">
+
+            <span class="author-block">
+              <a href="">Lizhen Wang</a><sup>*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="">Yongming Zhu</a><sup>*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="">Zhipeng Ge</a><sup>*</sup>,
+            </span>
+            <span class="author-block">
+              <!-- <a href="https://scholar.google.com/citations?user=qkJD6c0AAAAJ">Longhao Zhang</a><sup>*</sup>, -->
+              <a href="">Youwei Zheng</a><sup>*</sup>,
+            </span>
+            <span class="author-block">
+              <!-- <a href="https://scholar.google.com/citations?hl=en&user=BIixVT0AAAAJ">Tianshu Hu</a><sup>*†</sup> -->
+              <a href="">Tianshu Hu</a><sup>*†</sup>,
+            </span>
+            <br>
+            <span class="author-block">
+              <a href="">Shiyang Qin</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Mingshuang Luo</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Yulong Wang</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Zerong Zheng</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Chao Liang</a>,
+            </span>
+            <br>
+            <span class="author-block">
+              <a href="">Weifeng Chen</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Xing Wang</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Yuan Zhang</a>,
+            </span>
+            <span class="author-block">
+              <a href="">Mingyuan Gao</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Bytedance Intelligent Creation</span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="eql-cntrb"><Small><sup>*</sup>Core Contributors</Small></span>
+            <span class="eql-cntrb"><Small><sup>†</sup>Corresponding Author</Small></span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2504.01724"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <!-- <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span> -->
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="hero teaser" style="background-color: #f5f5f5;"> -->
+<section class="hero teaser">
+  <div class="container is-max-widescreen">
+    <div class="hero-body">
+      <!-- 在teaser上方插入图片 -->
+      <div class="has-text-centered" style="margin-bottom: 2rem;">
+        <img src="./static/images/teaser.png" alt="FlowAct-R1 Overview" class="img-responsive" style="max-width: 100%; height: auto; border-radius: 10px;">
+      </div>
+
+      <h2 class="subtitle has-text-justified">
+        <p>
+          We present <span class="dnerf">FlowAct-R1</span>, a novel framework that enables lifelike, responsive, and high-fidelity humanoid video generation for seamless real-time interaction.
+        </p>
+        <ul style="list-style-type: disc; padding-left: 20px;">
+          <li><strong>Streaming & Infinite-Length Generation:</strong> By integrating a MMDiT backbone with a chunkwise diffusion forcing strategy, our framework enables continuous, arbitrary-duration video generation while maintaining superior temporal consistency.</li>
+          <li><strong>Real-Time Performance with Low Latency:</strong> Through synergistic model-level distillation and system-level optimizations, our method achieves a stable 25 FPS video generation at 480p resolution with a time-to-first-frame (TTFF) of around 1.5s.</li>
+          <li><strong>Vividness & Generalization:</strong> The model delivers exceptional behavioral vividness and perceptual realism, capturing subtle human nuances for natural transitions across complex interactive states, while maintaining high-fidelity synthesis across diverse character styles from a single reference image.</li>
+        </ul>
+      </h2>
+
+      <div id="results-carousel" class="columns results-carousel">
+        <div class="column">
+          <video id="teaser1" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/teaser1.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column">
+          <video id="teaser2" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/teaser2.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column">
+          <video id="teaser3" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/teaser3.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column">
+          <video id="teaser4" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/teaser4.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-widescreen">
+    <!-- Abstract. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-4">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Interactive humanoid generation aims to synthesize lifelike agents that can engage with humans through continuous and responsive video.
+            Despite recent advances in video synthesis, existing methods often grapple with the trade-off between high-fidelity synthesis and real-time interaction requirements.
+            In this paper, we propose FlowAct-R1, a framework specifically designed for real-time interactive humanoid video generation. 
+            Built upon a MMDiT architecture, FlowAct-R1 enables the streaming synthesis of video with arbitrary durations while maintaining low-latency responsiveness. 
+            We introduce a chunkwise diffusion forcing strategy, complemented by a novel self-forcing variant, to alleviate error accumulation and ensure long-term temporal consistency during continuous interaction. 
+            By leveraging efficient distillation and system-level optimizations, our framework achieves a stable 25fps at 480p resolution with a time-to-first-frame (TTFF) of only around 1.5 seconds. 
+            The proposed method provides holistic and fine-grained full-body control, enabling the agent to transition naturally between diverse behavioral states in interactive scenarios. 
+            Experimental results demonstrate that FlowAct-R1 achieves exceptional behavioral vividness and perceptual realism, while maintaining robust generalization across diverse character styles.
+          </div>
+      </div>
+    </div> -->
+    <!--/ Abstract. -->
+
+    <!-- Method Illustration. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full" style="max-width: 75%;">
+        <h2 class="title is-4">Method Overview</h2>
+        <img src="./static/images/overview.png"
+         class="interpolation-image"
+         style="max-width: 100%; height: auto;"
+         alt="Interpolate start reference image."/>
+        <div class="content has-text-justified">
+        <p>
+          Overview of <span class="dnerf">FlowAct-R1</span>. 
+          It consists of training and inference stages: training integrates converting base full-attention DiT to streaming AR model via autoregressive adaptation, joint audio-motion finetuning for better lip-sync and body motion, multi-stage diffusion distillation; 
+          inference adopts a structured memory bank (Reference/Long/Short-term Memory, Denoising Stream) with chunkwise autoregressive generation and memory refinement. Complemented by system-level optimizations, it achieves 25fps real-time 480p video generation (TTFF ~1.5s) with vivid behavioral transitions.
+        </p>
+      </div>
+    </div>
+    <!--/ Method Illustration. -->
+
+    <!-- Paper video. -->
+<!--     <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-widescreen">
+    <!-- Diversity Section -->
+    <h2 class="title is-3" style="margin-bottom: 1rem;">Livestreaming</h2>
+    <div class="content has-text-justified">
+      <p class="subtitle">
+        FlowAct-R1 streamingly synthesizes lifelike humanoid videos with naturally expressive behaviors, enabling infinite durations for truly seamless interaction.
+      </p>
+    </div>
+
+    <div id="diversity-carousel" class="carousel results-carousel" style="margin: 0 3rem;">
+      <div class="item">
+        <video id="live1" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live1.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live2" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live2.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live3" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live3.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live4" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live4.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live5" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live5.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live6" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live6.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live7" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live7.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live8" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live8.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live9" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live9.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live10" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live10.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live11" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live11.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live12" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live12.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live10" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live13.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live11" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live14.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="item">
+        <video id="live12" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/live15.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Responsive Interaction Section -->
+    <h2 class="title is-3" style="margin-top: 4rem; margin-bottom: 1rem;">Video Conferencing</h2>
+    <div class="content has-text-justified">
+      <p class="subtitle">
+        FlowAct-R1 exhibits highly responsive interaction capabilities, enabling real-time adaptation to instant communication.
+      </p>
+    </div>
+
+    <div id="interaction-carousel" class="carousel results-carousel">
+      <!-- Interaction Example 1 -->
+      <div class="item control-item">
+        <video id="interaction1" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/chat1.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Interaction Example 2 -->
+      <div class="item control-item">
+        <video id="interaction2" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/chat2.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Interaction Example 3 -->
+      <div class="item control-item">
+        <video id="interaction3" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/chat3.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Interaction Example 4 -->
+      <div class="item control-item">
+        <video id="interaction4" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/chat4.mp4" type="video/mp4">
+        </video>
+      </div>
+      
+      <!-- Interaction Example 5 -->
+      <div class="item control-item">
+        <video id="interaction5" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/chat5.mp4" type="video/mp4">
+        </video>
+      </div>
+      
+      <!-- Interaction Example 6 -->
+      <div class="item control-item">
+        <video id="interaction6" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/chat6.mp4" type="video/mp4">
+        </video>
+      </div>
+      
+      <!-- Interaction Example 7 -->
+      <div class="item control-item">
+        <video id="interaction7" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/chat7.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Out-of-Distribution Section -->
+    <h2 class="title is-3" style="margin-top: 4rem; margin-bottom: 1rem;">Generalization</h2>
+    <div class="content has-text-justified">
+      <p class="subtitle">
+        Our method is robust to various character and motion styles.
+      </p>
+    </div>
+
+    <div id="control-carousel" class="carousel results-carousel">
+      <!-- Unit 1 -->
+      <div class="item control-item">
+        <video id="div1" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/div1.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Unit 2 -->
+      <div class="item control-item">
+        <video id="div2" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/div2.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Unit 3 -->
+      <div class="item control-item">
+        <video id="div3" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/div3.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Unit 4 -->
+      <div class="item control-item">
+        <video id="div4" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/div4.mp4" type="video/mp4">
+        </video>
+      </div>
+      
+      <!-- Unit 5 -->
+      <div class="item control-item">
+        <video id="div5" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/div5.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+
+    <h2 class="title is-3" style="margin-top: 4rem;">Comparing to SOTA Methods</h2>
+    
+    <!-- 添加描述文字 -->
+    <div class="content has-text-justified">
+      <p class="is-size-4">
+        FlowAct-R1 outperforms SOTA methods such as LiveAvatar, Omnihuman-1.5 and KlingAvatar2.0, by simultaneously achieving real-time streaming, infinite-duration generation, and superior behavioral naturalness.
+      </p>
+    </div>
+
+    <!-- Experiments -->
+    <!-- <h2 class="title is-4">Experimental Results</h2> -->
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <img src="./static/images/experiments.jpg"
+             style="max-width: 100%; height: auto; border-radius: 10px;"
+             alt="Experimental results comparing to SOTA methods."/>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{luo2025dreamactor,
+  title={FlowAct-R1: Towards Interactive Humanoid Video Generation},
+  author={},
+  journal={},
+  year={2026}
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <h2 class="title is-4">Ethics Concerns</h2>
+          <p>
+            The images and videos used in demos are sourced from public domains or generated by models, and are intended solely to showcase the capabilities of this research. Please contact us (hutianshu007@gmail.com) if there are any concerns, and we will delete it in time.
+          </p>
+          
+          <h2 class="title is-4">Acknowledgement</h2>
+          <p>
+            We would like to thank  <a href="https://nerfies.github.io/">Nerfies</a> for providing the website template.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+
+<!-- <footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.mov">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html> -->
